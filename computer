@@ -45,6 +45,9 @@ def main(array)
       return
     end
     answer = second_degree(array, discriminant)
+    if answer[0] == answer[1]
+      answer.shift
+    end
   end
 
   p answer
@@ -57,7 +60,20 @@ end
 
 perfect_return = parse ARGV
 
-puts "Simplified Return: " + perfect_return.inspect
-puts "Simplified String: #{perfect_return[0].to_s}X^0 + #{perfect_return[1].to_s}X^1 + #{perfect_return[2].to_s}X^2"
+shitty_values = perfect_return.map.with_index do |val, i|
+  next if val == 0.0
+  if val == val.to_i.to_f
+    val = val.to_i
+  end
+  case i
+  when 0
+    "#{val}"
+  when 1
+    "#{val}X"
+  else
+    "#{val}X^#{i}"
+  end
+end
+puts "Reduced form: #{shitty_values.compact.reverse.join(' + ')} = 0"
 
 main(perfect_return.reverse)
