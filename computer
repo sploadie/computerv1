@@ -1,15 +1,7 @@
 #!/usr/bin/env ruby
+require_relative 'parse'
 
-# DEBUG
-puts "Arguments: " + ARGV.inspect
-# DEBUG
+perfect_return = parse ARGV
 
-if ARGV.empty?
-  raise ArgumentError, "Needs an equation", caller
-end
-
-equation = ARGV.pop
-
-# DEBUG
-puts "Equation: " + equation
-# DEBUG
+puts "Perfect Return: " + perfect_return.inspect
+puts "Perfect String: #{perfect_return[0].to_s}X^0 + #{perfect_return[1].to_s}X^1 + #{perfect_return[2].to_s}X^2"
