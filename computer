@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+# DEBUG
+puts "Arguments: " + ARGV.inspect
+# DEBUG
+
+if ARGV.empty?
+  raise ArgumentError, "Needs an equation", caller
+end
+
+equation = ARGV.pop
+
+# DEBUG
+puts "Equation: " + equation
+# DEBUG
