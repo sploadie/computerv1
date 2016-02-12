@@ -7,20 +7,33 @@ end
 def parse_part(part)
   # Split part into array
   part = part.gsub  /\s+/, ' '
-  part = part.split /(\*|\+|\-)|\ /
+  # part = part.split /(\*|\+|\-)|\ /
+  part = part.split /(\*|\+)|\ /
+  part.map! { |part_part| part_part.split /(?<!\^)(\-)/ }
+  part.flatten!
   part.delete_if(&:empty?)
 
   raise ArgumentError, 'a side of the equation is empty' if part.empty?
+  verbose_puts 'Half (split): ' + part.inspect
 
   # part last index
   last_i = part.count - 1
 
   # Change number-strings to floats
-  part.map!.with_index do |val, i|
+  part = part.map.with_index do |val, i|
     # operator
     if ['*', '+', '-'].include? val
-      #can't be at start or end or next to another operator
-      raise ArgumentError, 'unpaired operator' if i == 0 || i == last_i || ['*', '+', '-'].include?(part[i - 1]) || ['*', '+', '-'].include?(part[i + 1])
+      # handle stupid cases
+      if ['+', '-'].include?(val) && ['+', '-'].include?(part[i + 1])
+        if val == part[i + 1]
+          part[i + 1] = '+'
+        else
+          part[i + 1] = '-'
+        end
+        next
+      end
+      # can't be at start or end or next to another operator
+      raise ArgumentError, 'unpaired operator' if i == 0 || i == last_i || ['*', '+', '-'].include?(part[i + 1])
       # minus operand
       if val == '-'
         part[i + 1] = "-#{part[i + 1]}"
@@ -60,7 +73,7 @@ def parse_part(part)
     end
     raise ArgumentError, "invalid component in equation: #{val}"
   end
-  return part
+  return part.compact
 end
 
 def solve_part(part)
@@ -89,11 +102,12 @@ def solve_part(part)
       end
     end
   end
-  x_array = [0.0, 0.0, 0.0]
+  x_array = []
   part.each do |val|
     next if val == :+
     raise ArgumentError, "invalid equation half: #{val} is not a valid value" unless val.is_a? Array
-    raise ArgumentError, "invalid equation: X to the power of #{val[1]} is not permitted" unless [0,1,2].include? val[1]
+    raise ArgumentError, "invalid equation: not a polynomial" if val[1] < 0
+    x_array[val[1]] = 0 if x_array[val[1]].nil?
     x_array[val[1]] += val[0]
   end
   return x_array
@@ -129,8 +143,13 @@ def parse(arguments)
     half
   end
 
-  final_half = [0,1,2].map do |i|
-    halves[0][i] - halves[1][i]
+  factors = halves[0].count > halves[1].count ? halves[0].count : halves[1].count
+
+  final_half = []
+  factors.times do |i|
+    left  = halves[0][i].nil? ? 0 : halves[0][i]
+    right = halves[1][i].nil? ? 0 : halves[1][i]
+    final_half[i] = left - right
   end
 
   return final_half
