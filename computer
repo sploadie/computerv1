@@ -1,7 +1,63 @@
 #!/usr/bin/env ruby
 require_relative 'parse'
 
+def abs(n)
+  return n < 0 ? n * -1 : n
+end
+
+def isqrt (n)
+  x = n
+  while (abs(x * x - n) > 0.001)
+    x = (x * x + n) / (2 * x)
+  end
+
+  return x
+end
+
+# b^2 - 4ac
+def calculate_discriminant(array)
+  return (array[1] * array[1]) - (4 * array[0] * array[2])
+end
+
+def first_degree(array)
+  return (array[2] / array[1]) * -1.0
+end
+
+def second_degree(array, discriminant)
+  return [(-1 * array[1] + isqrt(discriminant)) / (2 * array[0]), (-1 * array[1] - isqrt(discriminant)) / (2 * array[0])]
+end
+
+def main(array)
+  # p argv
+
+  # if argv.length != 1
+  #   print "Error: Program only accepts one argument.\n"
+  #   return
+  # end
+  p array
+
+  if array[0] == 0
+    answer = first_degree(array)
+  else
+    discriminant =  calculate_discriminant(array)
+    if discriminant < 0
+      print "The discriminant is negative, there are no solutions\n"
+      return
+    end
+    answer = second_degree(array, discriminant)
+  end
+
+  p answer
+end
+
+if ARGV[0] == '-v'
+  $VERBOSE = true
+  ARGV.shift
+end
+
 perfect_return = parse ARGV
 
-puts "Perfect Return: " + perfect_return.inspect
-puts "Perfect String: #{perfect_return[0].to_s}X^0 + #{perfect_return[1].to_s}X^1 + #{perfect_return[2].to_s}X^2"
+puts "Simplified Return: " + perfect_return.inspect
+puts "Simplified String: #{perfect_return[0].to_s}X^0 + #{perfect_return[1].to_s}X^1 + #{perfect_return[2].to_s}X^2"
+
+main(perfect_return.reverse)
