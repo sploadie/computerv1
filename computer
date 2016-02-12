@@ -28,29 +28,24 @@ def second_degree(array, discriminant)
 end
 
 def main(array)
-  # p argv
-
-  # if argv.length != 1
-  #   print "Error: Program only accepts one argument.\n"
-  #   return
-  # end
-  p array
-
   if array[0] == 0
+    print "Polynomial degree: 1\n"
     answer = first_degree(array)
   else
+    print "Polynomial degree: 2\n"
     discriminant =  calculate_discriminant(array)
     if discriminant < 0
       print "The discriminant is negative, there are no solutions\n"
       return
     end
+    print "Discriminant is strictly positive, the two solutions are:\n"
     answer = second_degree(array, discriminant)
     if answer[0] == answer[1]
       answer.shift
     end
   end
 
-  p answer
+  puts answer.join("\n")
 end
 
 if ARGV[0] == '-v'
