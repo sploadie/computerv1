@@ -28,6 +28,14 @@ def second_degree(array, discriminant)
 end
 
 def main(array)
+  if (array[0] == 0 && array[1] == 0 && array[2] == 0)
+    puts "All real numbers"
+    return
+  elsif array[0] == 0 && array[1] == 0
+    puts "No real solutions"
+    return
+  end
+
   if array[0] == 0
     answer = first_degree(array)
   else
@@ -36,10 +44,12 @@ def main(array)
       print "The discriminant is negative, there are no solutions\n"
       return
     end
-    print "Discriminant is strictly positive, the two solutions are:\n"
     answer = second_degree(array, discriminant)
     if answer[0] == answer[1]
       answer.shift
+      puts "Discriminant is strictly positive, the one solution is:"
+    else
+      puts "Discriminant is strictly positive, the two solutions are:"
     end
   end
   answer.each do |val|
@@ -69,8 +79,6 @@ reduced_string = perfect_return.map.with_index do |val, i|
   end
 end
 
-p perfect_return
-
 puts "Reduced form: #{reduced_string.compact.reverse.join(' + ')} = 0"
 puts "Polynomial degree: #{perfect_return.count}"
 
@@ -81,6 +89,5 @@ else
   while perfect_return.count < 3
     perfect_return.unshift 0.0
   end
-  p perfect_return
   main(perfect_return)
 end
