@@ -67,7 +67,7 @@ def parse_part(part)
       raise ArgumentError, "invalid component in equation: #{val}" if x[1][0] != '^'
       x[1][0] = ''
       x[1] = Float(x[1]) rescue raise(ArgumentError, "invalid component in equation: #{val}")
-      raise ArgumentError, "invalid component in equation: #{val}" if x[1] % 1 != 0
+      raise ArgumentError, "not a polynomial: invalid component in equation: #{val}" if x[1] % 1 != 0
       x[1] = x[1].to_i
       next x
     end
@@ -139,7 +139,6 @@ def parse(arguments)
     verbose_puts 'Half (parsed): ' + half.inspect
     half = solve_part half
     verbose_puts 'Half (simplified): ' + half.inspect
-    verbose_puts '=============='
     half
   end
 
@@ -152,5 +151,8 @@ def parse(arguments)
     final_half[i] = left - right
   end
 
+  verbose_puts '=============='
+  verbose_puts 'Final Half: ' + final_half.inspect
+  verbose_puts '=============='
   return final_half
 end

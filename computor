@@ -70,37 +70,51 @@ def main(array)
   end
 end
 
+def print_reduced(polynomial_array)
+  reduced_array = polynomial_array.map.with_index do |val, i|
+    next if val == 0.0
+    val = val.to_i if val == val.to_i.to_f
+    val = ''       if val == 1
+    val = '-'       if val == -1
+    case i
+    when 0
+      "#{val}"
+    when 1
+      "#{val}X"
+    else
+      "#{val}X^#{i}"
+    end
+  end.compact.reverse
+  reduced_string = reduced_array.empty? ? '0' : reduced_array.join(' + ')
+  puts "Reduced form: #{reduced_string} = 0"
+end
+
+def polynomial_degree(polynomial_array)
+  degree = 0
+  polynomial_array.each.with_index do |val, i|
+    degree = i unless val == 0.0
+  end
+  return degree
+end
+
 if ARGV[0] == '-v'
   $VERBOSE = true
   ARGV.shift
 end
 
-perfect_return = parse ARGV
+p_array = parse ARGV
 
-reduced_string = perfect_return.map.with_index do |val, i|
-  next if val == 0.0
-  if val == val.to_i.to_f
-    val = val.to_i
-  end
-  case i
-  when 0
-    "#{val}"
-  when 1
-    "#{val}X"
-  else
-    "#{val}X^#{i}"
-  end
-end
+print_reduced p_array
+degree = polynomial_degree p_array
+puts "Polynomial degree: #{degree}"
 
-puts "Reduced form: #{reduced_string.compact.reverse.join(' + ')} = 0"
-puts "Polynomial degree: #{perfect_return.count}"
-
-if perfect_return.count > 3
+if degree > 2
   puts "The polynomial degree is stricly greater than 2, I can't solve."
 else
-  perfect_return = perfect_return.reverse
-  while perfect_return.count < 3
-    perfect_return.unshift 0.0
-  end
-  main(perfect_return)
+  main_array = [0.0, 0.0, 0.0]
+  main_array[0] = p_array[2] unless p_array[2].nil?
+  main_array[1] = p_array[1] unless p_array[1].nil?
+  main_array[2] = p_array[0] unless p_array[0].nil?
+  p main_array
+  main(p_array)
 end
