@@ -147,8 +147,8 @@ def parse(arguments)
 
   final_half = []
   factors.times do |i|
-    left  = halves[0][i].nil? ? 0 : halves[0][i]
-    right = halves[1][i].nil? ? 0 : halves[1][i]
+    left  = halves[0][i].nil? ? 0.0 : halves[0][i]
+    right = halves[1][i].nil? ? 0.0 : halves[1][i]
     final_half[i] = left - right
   end
 

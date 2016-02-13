@@ -20,7 +20,7 @@ def calculate_discriminant(array)
 end
 
 def first_degree(array)
-  return (array[2] / array[1]) * -1.0
+  return [(array[2] / array[1]) * -1.0]
 end
 
 def second_degree(array, discriminant)
@@ -29,10 +29,8 @@ end
 
 def main(array)
   if array[0] == 0
-    print "Polynomial degree: 1\n"
     answer = first_degree(array)
   else
-    print "Polynomial degree: 2\n"
     discriminant =  calculate_discriminant(array)
     if discriminant < 0
       print "The discriminant is negative, there are no solutions\n"
@@ -44,8 +42,9 @@ def main(array)
       answer.shift
     end
   end
-
-  puts answer.join("\n")
+  answer.each do |val|
+    p val
+  end
 end
 
 if ARGV[0] == '-v'
@@ -55,7 +54,7 @@ end
 
 perfect_return = parse ARGV
 
-shitty_values = perfect_return.map.with_index do |val, i|
+reduced_string = perfect_return.map.with_index do |val, i|
   next if val == 0.0
   if val == val.to_i.to_f
     val = val.to_i
@@ -69,6 +68,19 @@ shitty_values = perfect_return.map.with_index do |val, i|
     "#{val}X^#{i}"
   end
 end
-puts "Reduced form: #{shitty_values.compact.reverse.join(' + ')} = 0"
 
-main(perfect_return.reverse)
+p perfect_return
+
+puts "Reduced form: #{reduced_string.compact.reverse.join(' + ')} = 0"
+puts "Polynomial degree: #{perfect_return.count}"
+
+if perfect_return.count > 3
+  puts "The polynomial degree is stricly greater than 2, I can't solve."
+else
+  perfect_return = perfect_return.reverse
+  while perfect_return.count < 3
+    perfect_return.unshift 0.0
+  end
+  p perfect_return
+  main(perfect_return)
+end
