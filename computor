@@ -27,6 +27,13 @@ def second_degree(array, discriminant)
   return [(-1 * array[1] + isqrt(discriminant)) / (2 * array[0]), (-1 * array[1] - isqrt(discriminant)) / (2 * array[0])]
 end
 
+def second_degree_imaginary(array, discriminant)
+  discriminant *= -1
+  part1 = (-1 * array[1]) / (2 * array[0])
+  part2 = (isqrt(discriminant)) / (2 * array[0])
+  return [part1.to_s + " + i * " + part2.to_s, part1.to_s + " - i * " + part2.to_s]
+end
+
 def main(array)
   if (array[0] == 0 && array[1] == 0 && array[2] == 0)
     puts "All real numbers"
@@ -41,19 +48,25 @@ def main(array)
   else
     discriminant =  calculate_discriminant(array)
     if discriminant < 0
-      print "The discriminant is negative, there are no solutions\n"
-      return
-    end
-    answer = second_degree(array, discriminant)
-    if answer[0] == answer[1]
-      answer.shift
-      puts "Discriminant is strictly positive, the one solution is:"
+      answer = second_degree_imaginary(array, discriminant)
+      if answer[0] == answer[1]
+        answer.shift
+        puts "Discriminant is strictly negative, the one complex solution is:"
+      else
+        puts "Discriminant is strictly negative, the two complex solutions are:"
+      end
     else
-      puts "Discriminant is strictly positive, the two solutions are:"
+      answer = second_degree(array, discriminant)
+      if answer[0] == answer[1]
+        answer.shift
+        puts "Discriminant is strictly positive, the one solution is:"
+      else
+        puts "Discriminant is strictly positive, the two solutions are:"
+      end
     end
   end
   answer.each do |val|
-    p val
+    puts val
   end
 end
 
