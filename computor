@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 require_relative 'parse'
+$PRECISION = 0.0001
+$VERBOSE   = false
+$FRACTION  = false
+# $PRECISION = 0.00000001
 
 def abs(n)
   return n < 0 ? n * -1 : n
@@ -31,23 +35,27 @@ def second_degree_imaginary(array, discriminant)
   discriminant *= -1
   part1 = (-1 * array[1]) / (2 * array[0])
   part2 = (isqrt(discriminant)) / (2 * array[0])
+  if $FRACTION == true
+    return [part1.to_r.rationalize($PRECISION).to_s + " + i * " + part2.to_r.rationalize($PRECISION).to_s, part1.to_r.rationalize($PRECISION).to_s + " - i * " + part2.to_r.rationalize($PRECISION).to_s]
+  end
   return [part1.to_s + " + i * " + part2.to_s, part1.to_s + " - i * " + part2.to_s]
 end
 
 def main(array)
-  if (array[0] == 0 && array[1] == 0 && array[2] == 0)
+  if (array[0] == 0.0 && array[1] == 0.0 && array[2] == 0.0)
     puts "All real numbers"
     return
-  elsif array[0] == 0 && array[1] == 0
+  elsif array[0] == 0.0 && array[1] == 0.0
     puts "No real solutions"
     return
   end
 
-  if array[0] == 0
+  if array[0] == 0.0
     answer = first_degree(array)
+    puts "The solution is:"
   else
     discriminant =  calculate_discriminant(array)
-    if discriminant < 0
+    if discriminant < 0.0
       answer = second_degree_imaginary(array, discriminant)
       if answer[0] == answer[1]
         answer.shift
@@ -66,7 +74,11 @@ def main(array)
     end
   end
   answer.each do |val|
-    puts val
+    if $FRACTION == true && val.is_a?(Float)
+      puts val.to_r.rationalize($PRECISION).to_s
+    else
+      puts val
+    end
   end
 end
 
@@ -74,8 +86,8 @@ def print_reduced(polynomial_array)
   reduced_array = polynomial_array.map.with_index do |val, i|
     next if val == 0.0
     val = val.to_i if val == val.to_i.to_f
-    val = ''       if val == 1
-    val = '-'       if val == -1
+    val = ''       if val == 1  && i != 0
+    val = '-'      if val == -1 && i != 0
     case i
     when 0
       "#{val}"
@@ -97,9 +109,22 @@ def polynomial_degree(polynomial_array)
   return degree
 end
 
-if ARGV[0] == '-v'
-  $VERBOSE = true
-  ARGV.shift
+while true do
+  if ARGV[0] == '-v'
+    $VERBOSE = true
+    ARGV.shift
+    next
+  elsif ARGV[0] == '-f'
+    $FRACTION = true
+    ARGV.shift
+    next
+  elsif ARGV[0] == '-vf' || ARGV[0] == '-fv'
+    $VERBOSE = true
+    $FRACTION = true
+    ARGV.shift
+    next
+  end
+  break
 end
 
 p_array = parse ARGV
@@ -115,6 +140,5 @@ else
   main_array[0] = p_array[2] unless p_array[2].nil?
   main_array[1] = p_array[1] unless p_array[1].nil?
   main_array[2] = p_array[0] unless p_array[0].nil?
-  p main_array
-  main(p_array)
+  main(main_array)
 end
