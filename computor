@@ -59,15 +59,23 @@ def main(array)
       answer = second_degree_imaginary(array, discriminant)
       if answer[0] == answer[1]
         answer.shift
-        puts "Discriminant is strictly negative, the one complex solution is:"
+        puts "Discriminant is strictly negative, the complex solution is:"
       else
         puts "Discriminant is strictly negative, the two complex solutions are:"
+      end
+    elsif discriminant == 0.0
+      answer = second_degree(array, discriminant)
+      if answer[0] == answer[1]
+        answer.shift
+        puts "Discriminant is null, the solution is:"
+      else
+        puts "Discriminant is null, the two complex solutions are:"
       end
     else
       answer = second_degree(array, discriminant)
       if answer[0] == answer[1]
         answer.shift
-        puts "Discriminant is strictly positive, the one solution is:"
+        puts "Discriminant is strictly positive, the solution is:"
       else
         puts "Discriminant is strictly positive, the two solutions are:"
       end
