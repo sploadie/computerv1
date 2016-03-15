@@ -11,10 +11,9 @@ end
 
 def isqrt (n)
   x = n
-  while (abs(x * x - n) > 0.001)
+  while (abs(x * x - n) > 0.000000000000001)
     x = (x * x + n) / (2 * x)
   end
-
   return x
 end
 
